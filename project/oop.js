@@ -52,10 +52,14 @@ var p = {a:1,b:2,c:function f(m){
 var a = {a:2,d:1,d:function d(n){
     return n;    
 }}
+//枚举类型的自有属性的名称
+console.log('枚举类型的自有属性的名称:',Object.getOwnPropertyNames(p));
+//所有自有属性的名称
+console.log('所有自有属性的名称:',Object.keys(p));
 
 //this关键字
 //this在函数体内表示指向这个点的对象
-//存储器属性
+//存储器属性(直接定义存储器属性)
 var p = {
     x:1,
     y:2,
@@ -103,4 +107,53 @@ serial.next = 10;
 console.log(serial.next);
 
 
+//属性的特性,一个属性包含名字和四个特性(描述符)，分别为值，可写性，可枚举性，可配置性
+//value,writable,enumerable,configurable,均为布尔值
+//查询自有的描述符
+//对于存储器属性，描述符为读取(get，函数类型)，写入(set，函数类型)，可枚举(enumerable，布尔)，可配置(configurable，布尔)等
+var des = {x:1,y:1,c:function c(){
+        return 'success';
+    }   
+}
+
+var boo = Object.getOwnPropertyDescriptor(des,'c');
+console.log('des对象的c属性的描述符为：',boo);
+//修改自有的描述符
+Object.defineProperty(des,'c',{value:2,writable:true,enumerable:false,configurable:true});
+var boo = Object.getOwnPropertyDescriptor(des,'c');
+console.log('des对象的c属性的描述符为：',boo);
+
+//批量修改/新增自有属性，第一个参数为对象，第二个参数为映射表, Object.defineProperties()
+var a = {};
+var obb = Object.defineProperties(a,{//返回对象
+    x:{value:10,writable:true,enumerable:false,configurable:true},
+    y:{value:20,writable:true,enumerable:false,configurable:true},
+    c:{get:function(){return this.x+this.y;},enumerable:true,configurable:true}
+});
+console.log(obb.c)
+
+/*对象的三个属性
+①原型属性(prototype)
+②类属性(class)
+③可扩展性(extensible)*/
+
+//查询原型
+console.log('obb的原型是:',Object.getPrototypeOf(obb));
+//检查一个对象是否是另一个对象的原型
+console.log('对象Object.prototype是否是对象obb的原型:',Object.prototype.isPrototypeOf(obb));
+console.log('对象a是否是对象obb的原型:',a.isPrototypeOf(obb));//由此可见，Object.defineProperties并不能产生继承
+
+//类的属性，类的属性是一个字符串
+console.log(obb.toString());
+//调用util.js中封装好的方法来获取对象的类属性
+var m = {x:12,y:14};
+var newob = new Array();
+console.log('newob的类属性为:',foo.classof(newob));//Array
+//自定义的对象，Object.create()创建出来的对象的类属性都是Object，因此自定义等对象没法通过类属性来区分类;
+
+//可扩展性,可扩展性表示是否可以给新对象添加属性，不可扩展是把对象锁起来，不受外界干扰
+//判断一个对象是否可扩展
+console.log('对象newob扩展性:',Object.isExtensible(newob));
+console.log('将newob转为不可扩展对象：',Object.preventExtensions(newob))
+console.log('转换后，对象newob扩展性:',Object.isExtensible(newob));
 

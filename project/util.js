@@ -11,3 +11,11 @@ exports.inherit = function(p){
     f.prototype = p;
     return new f(); //使用f()创建p的继承对象
 }
+
+//正确返回toString()版本，获取对象 类属性
+exports.classof = function(o){
+    if(o === null )return null;
+    if(o === undefined )return undefined;
+    return Object.prototype.toString.call(o).slice(8,-1);
+}
+
